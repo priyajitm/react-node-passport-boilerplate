@@ -2,9 +2,16 @@ const express = require('express');
 const router = express.Router();
 const User = require('../user');
 const bcrypt = require('bcryptjs');
-const passportLocal = require('passport-local').Strategy;
+const cors = require('cors');
 
 const passport = require('passport');
+
+var corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -47,15 +54,15 @@ router.get('/logout', function (req, res) {
 });
 
 router.get(
-  '/auth/google',
+  '/google',
+  cors(corsOptions),
   passport.authenticate('google', {
     scope: ['profile', 'email'],
   }),
 );
 
-router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
+router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
   res.send(req.user);
-  res.send('you reached the redirect URI');
 });
 
 module.exports = router;

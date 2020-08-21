@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const config = require('config');
 
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      'mongodb+srv://priyajit:indiatimes@cluster0.bb04n.mongodb.net/react-passport-auth?retryWrites=true&w=majority',
+      config.get('mongoURI'),
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

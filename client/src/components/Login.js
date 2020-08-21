@@ -19,7 +19,7 @@ const Login = () => {
   };
 
   const onClick = async () => {
-    await Axios.get('/api/auth/google');
+    await Axios.get('/auth/google');
   };
 
   return (
