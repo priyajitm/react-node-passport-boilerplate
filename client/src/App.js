@@ -1,17 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Register from './components/Register';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './components/Login';
-import GetUser from './components/GetUser';
+import ForgotPassword from './components/ForgotPassword';
+import { AppProvider } from './context/AppState';
+import Register from './components/Register';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
-    <div>
-      <Register />
-      <Login />
-      <GetUser />
-    </div>
+    <AppProvider>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/resetpassword" component={ForgotPassword} />
+        </Switch>
+      </Router>
+    </AppProvider>
   );
 }
 
