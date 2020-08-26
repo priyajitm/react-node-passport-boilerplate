@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
 import Axios from 'axios';
+import { OTPEmail, registered, resetPasswordOTP, resetPassword } from '../';
 
 const initialState = {
   user: '',
@@ -27,22 +28,62 @@ export const AppProvider = ({ children }) => {
     return OTP;
   };
 
-  const sendOTP = async (email) => {
+  const sendEmailOTP = async (email) => {
+    OTP = '';
     await generateOTP();
     console.log(OTP);
+    const data = {
+      email,
+      OTP,
+    };
+    const sendEmail = await Axios.post('api/mail/otpemail', data);
+  };
+
+  const sendPasswordOTP = async (email) => {
+    OTP = '';
+    await generateOTP();
+    console.log(OTP);
+    const data = {
+      email,
+      OTP,
+    };
+    const sendEmail = await Axios.post('api/mail/otppassword', data);
   };
 
   const verifyOTP = async (code) => {
     return code === OTP;
   };
 
-  const registerUser = (user, email, password) => {
+  const registerUser = async (user, email, password) => {
     console.log(user, email, password);
+    const data = {
+      user,
+      email,
+      password,
+    };
+    const response = await Axios.post('api/register', data);
+  };
+
+  const loginUser = async (email, password) => {
+    const response = await Axios.post('api/auth/login');
+  };
+
+  const passwordReset = async (email) => {
+    await Axios.post('api/passwordreset', email);
   };
 
   return (
     <AppContext.Provider
-      value={{ user: state.user, isAuthenticated: state.isAuthenticated, sendOTP, verifyOTP, registerUser }}
+      value={{
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+        sendEmailOTP,
+        sendPasswordOTP,
+        verifyOTP,
+        registerUser,
+        passwordReset,
+        loginUser,
+      }}
     >
       {children}
     </AppContext.Provider>

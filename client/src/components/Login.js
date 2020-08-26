@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
-  const [user, setUser] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
 
   const loginuser = () => {
     console.log('login');
@@ -62,19 +62,19 @@ const Login = () => {
             </div>
             <div className="flex items-center justify-between mt-4">
               <div className="text-center float-left">
-                <a
+                <Link
                   className="no-underline inline-block align-baseline font-bold text-xs md:text-sm text-blue-600"
-                  href="#"
+                  to="/resetpassword"
                 >
-                  <Link to="/resetpassword">Forgot Password?</Link>
-                </a>
+                  Forgot Password?
+                </Link>
               </div>
               <div className="text-center float-right">
                 <p className="text-gray-800 text-sm">
                   Don't have an account?{' '}
-                  <a className="no-underline text-blue-600 font-bold">
-                    <Link to="/register">Create an Account</Link>
-                  </a>
+                  <Link className="no-underline text-blue-600 font-bold" to="/register">
+                    Create an Account
+                  </Link>
                   .
                 </p>
               </div>
