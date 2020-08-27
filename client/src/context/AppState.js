@@ -31,23 +31,17 @@ export const AppProvider = ({ children }) => {
   const sendEmailOTP = async (email) => {
     OTP = '';
     await generateOTP();
+
+    // As email feature has not implemented, I am console logging the OTP
     console.log(OTP);
-    const data = {
-      email,
-      OTP,
-    };
-    const sendEmail = await Axios.post('api/mail/otpemail', data);
   };
 
   const sendPasswordOTP = async (email) => {
     OTP = '';
     await generateOTP();
+
+    // As email feature has not implemented, I am console logging the OTP
     console.log(OTP);
-    const data = {
-      email,
-      OTP,
-    };
-    const sendEmail = await Axios.post('api/mail/otppassword', data);
   };
 
   const verifyOTP = async (code) => {

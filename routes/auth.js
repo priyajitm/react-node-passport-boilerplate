@@ -1,17 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../user');
+const User = require('../model/UserModel');
 const bcrypt = require('bcryptjs');
-const cors = require('cors');
 
 const passport = require('passport');
 
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-};
+router.post('/register', (req, res) => {
+  User.findOne({ email: req.body.email }, async (err, doc) => {
+    if (err) throw err;
+    if (doc) res.send('User Already Exists');
+    if (!doc) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      const newUser = new User({
+        name: req.body.user,
+        email: req.body.email,
+        password: hashedPassword,
+      });
+      await newUser.save();
+      res.send('User Created');
+    }
+  });
+});
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -27,23 +37,6 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/register', (req, res) => {
-  User.findOne({ username: req.body.username }, async (err, doc) => {
-    if (err) throw err;
-    if (doc) res.send('User Already Exists');
-    if (!doc) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-      const newUser = new User({
-        username: req.body.username,
-        password: hashedPassword,
-      });
-      await newUser.save();
-      res.send('User Created');
-    }
-  });
-});
-
 router.get('/user', (req, res) => {
   res.send(req.user); // The req.user stores the entire user that has been authenticated inside of it.
 });
@@ -55,7 +48,6 @@ router.get('/logout', function (req, res) {
 
 router.get(
   '/google',
-  cors(corsOptions),
   passport.authenticate('google', {
     scope: ['profile', 'email'],
   }),
